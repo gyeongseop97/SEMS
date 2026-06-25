@@ -30,7 +30,6 @@
   }
 
   function isAdmin(){ return profile && profile.role === 'admin'; }
-  function ownCompany(){ return profile && profile.company ? profile.company : ''; }
   function selectedYear(){ return Number(($('year') && $('year').value) || new Date().getFullYear()); }
   function selectedMonth(){ return Number(($('month') && $('month').value) || new Date().getMonth() + 1); }
 
@@ -42,16 +41,28 @@
     document.head.appendChild(style);
   }
 
+  function findRightActionGroup(){
+    const addBtn = $('addInlineEntryButton') || Array.from(document.querySelectorAll('button')).find((b) => text(b).includes('+ 행 추가'));
+    if (addBtn && addBtn.parentElement) return addBtn.parentElement;
+    const csvBtn = Array.from(document.querySelectorAll('button')).find((b) => text(b).includes('CSV 불러오기'));
+    if (csvBtn && csvBtn.parentElement) return csvBtn.parentElement;
+    return null;
+  }
+
   function ensureCompleteButton(){
     if (isAdmin()) return;
-    const row = document.querySelector('#entriesTab .filter-row');
-    if (!row || $('monthlyCompleteButton')) return;
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.id = 'monthlyCompleteButton';
-    btn.className = 'monthly-complete-btn';
-    btn.textContent = '작성 완료';
-    row.appendChild(btn);
+    const old = $('monthlyCompleteButton');
+    const group = findRightActionGroup();
+    if (!group) return;
+    let btn = old;
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.type = 'button';
+      btn.id = 'monthlyCompleteButton';
+      btn.className = 'monthly-complete-btn';
+      btn.textContent = '작성 완료';
+    }
+    group.appendChild(btn);
   }
 
   function ensureStatusTab(){
