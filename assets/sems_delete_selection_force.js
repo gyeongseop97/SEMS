@@ -11,24 +11,47 @@
     const style = document.createElement('style');
     style.id = 'semsDeleteForceStyle';
     style.textContent = `
-      #monthlyOutputBasisWrap,
+      #monthlyOutputBasisWrap.monthly-output-wrap,
       .monthly-output-wrap{
-        min-width:240px!important;
-        width:240px!important;
-        flex:0 0 240px!important;
+        display:inline-grid!important;
+        grid-template-columns:max-content minmax(118px,1fr)!important;
+        align-items:center!important;
+        column-gap:12px!important;
+        height:40px!important;
+        min-width:260px!important;
+        width:280px!important;
+        max-width:280px!important;
+        flex:0 0 280px!important;
         overflow:visible!important;
         white-space:nowrap!important;
         padding:0 14px!important;
+        box-sizing:border-box!important;
       }
-      #monthlyOutputBasisLabel{display:inline-block!important;min-width:54px!important;white-space:nowrap!important;overflow:visible!important;}
-      #monthlyOutputBasis{
-        min-width:132px!important;
-        width:132px!important;
+      #monthlyOutputBasisLabel,
+      .monthly-output-wrap span{
+        display:block!important;
+        min-width:0!important;
+        width:auto!important;
         max-width:none!important;
+        white-space:nowrap!important;
+        overflow:visible!important;
+        text-overflow:clip!important;
+        line-height:1!important;
+      }
+      #monthlyOutputBasis,
+      .monthly-output-wrap select{
+        display:block!important;
+        min-width:118px!important;
+        width:100%!important;
+        max-width:none!important;
+        height:32px!important;
+        line-height:32px!important;
         overflow:visible!important;
         white-space:nowrap!important;
-        padding-right:24px!important;
+        padding-left:8px!important;
+        padding-right:28px!important;
         text-overflow:clip!important;
+        box-sizing:border-box!important;
       }
       #entriesTab th.sems-force-delete-head{cursor:pointer!important;text-align:center!important;user-select:none!important;min-width:72px!important;}
       #entriesTab th.sems-force-delete-head:hover{background:#eef2ff!important;color:#1d4ed8!important;}
