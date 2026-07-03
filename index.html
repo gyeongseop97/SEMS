@@ -22,7 +22,7 @@
       html=html.replace('sb = window.supabase.createClient(cfg.url, cfg.anonKey);','sb = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true } });');
       html=html.replace('<button type="button" class="secondary mini-action" data-action="factors">적용 배출계수 세트 편집</button>','');
       html=html.replace('<div id="semsServerBadge" class="sems-server-badge">Supabase 연결됨</div>','');
-      html=html.replace('</body>','<style>.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}#monthlyOutputBasisWrap,.monthly-output-wrap{min-width:240px!important;width:240px!important;flex:0 0 240px!important;overflow:visible!important;white-space:nowrap!important}#monthlyOutputBasis{min-width:132px!important;width:132px!important;max-width:none!important}</style><script src="assets/sems_monthly_complete.js?v=20260618"><\\/script><script src="assets/sems_delete_force_final.js?v=20260618"><\\/script></body>');
+      html=html.replace('</body>','<style>.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}#monthlyOutputBasisWrap,.monthly-output-wrap{min-width:240px!important;width:240px!important;flex:0 0 240px!important;overflow:visible!important;white-space:nowrap!important}#monthlyOutputBasis{min-width:132px!important;width:132px!important;max-width:none!important}</style><script src="assets/sems_monthly_complete.js?v=20260618"><\\/script><script src="assets/sems_delete_selection_force.js?v=20260618"><\\/script></body>');
       document.open();
       document.write(html);
       document.close();
