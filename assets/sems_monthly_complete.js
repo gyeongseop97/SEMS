@@ -53,6 +53,7 @@
     const style = document.createElement('style');
     style.id = 'simpleMonthlyStyle';
     style.textContent = `
+      .tabs{display:flex!important;flex-direction:column!important;}
       .sewon-language-switch{
         position:static!important;
         left:auto!important;
@@ -60,6 +61,7 @@
         bottom:auto!important;
         width:auto!important;
         min-width:0!important;
+        order:999!important;
         display:grid!important;
         grid-template-columns:1fr 1fr!important;
         gap:4px!important;
@@ -88,6 +90,7 @@
         box-shadow:0 8px 18px rgba(0,0,0,.18)!important;
       }
       .sewon-lang-btn:not(.active):hover{background:rgba(255,255,255,.08)!important;color:#fff!important;}
+      #monthlyStatusTabButton{order:900!important;}
       .monthly-complete-btn{height:40px;border-radius:10px;border:0;background:#2563eb;color:#fff;font-weight:900;padding:0 14px;cursor:pointer}
       .monthly-status-tab{grid-column:2;padding:22px 28px 32px!important;background:#f5f7fb}
       .monthly-status-card{background:#fff;border:1px solid #e5eaf2;border-radius:18px;padding:18px;box-shadow:0 8px 24px rgba(15,23,42,.045)}
@@ -101,6 +104,15 @@
     document.head.appendChild(style);
   }
 
+  function moveLanguageSwitchToBottom(){
+    const tabs = document.querySelector('.tabs');
+    const lang = document.querySelector('.sewon-language-switch');
+    if (!tabs || !lang) return;
+    if (lang.parentElement !== tabs || tabs.lastElementChild !== lang) {
+      tabs.appendChild(lang);
+    }
+  }
+
   function applyLanguageToMonthlyUi(){
     const completeBtn = $('monthlyCompleteButton');
     if (completeBtn) completeBtn.textContent = label('작성 완료', 'Complete');
@@ -111,6 +123,7 @@
       if (btn.dataset.lang === 'ko') btn.textContent = '한국어';
       if (btn.dataset.lang === 'en') btn.textContent = 'EN';
     });
+    moveLanguageSwitchToBottom();
   }
 
   function findRightActionGroup(){
@@ -149,6 +162,7 @@
       tabs.appendChild(btn);
     }
     btn.textContent = label('월별 제출 현황', 'Monthly Status');
+    moveLanguageSwitchToBottom();
 
     const card = tabs.closest('.card');
     if (card && !$('monthlyStatusTab')) {
