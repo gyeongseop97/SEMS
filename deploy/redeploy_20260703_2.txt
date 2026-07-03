@@ -1,0 +1,3 @@
+Redeploy GitHub Pages for SEMS delete selection feature.
+No application code changed in this commit.
+Timestamp: 2026-07-03 redeploy-2
