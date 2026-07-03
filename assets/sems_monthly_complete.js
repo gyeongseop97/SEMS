@@ -61,8 +61,9 @@
       #monthlyStatusTabButton{order:900!important;}
       .monthly-complete-btn{height:40px;border-radius:10px;border:0;background:#2563eb;color:#fff;font-weight:900;padding:0 14px;cursor:pointer;white-space:nowrap;}
       .monthly-complete-btn.withdraw{background:#fff7ed!important;color:#9a3412!important;border:1px solid #fed7aa!important;}
-      .monthly-output-wrap{display:inline-flex;align-items:center;gap:8px;height:40px;border:1px solid #dbeafe;background:#f8fbff;border-radius:12px;padding:0 10px;font-size:12px;font-weight:900;color:#334155;}
-      .monthly-output-wrap select{height:30px;border:0;background:transparent;font-weight:900;color:#111827;outline:none;min-width:90px;}
+      .monthly-output-wrap{display:inline-flex;align-items:center;gap:10px;height:40px;min-width:190px;flex:0 0 auto;border:1px solid #dbeafe;background:#f8fbff;border-radius:12px;padding:0 12px;font-size:12px;font-weight:950;color:#334155;white-space:nowrap;}
+      .monthly-output-wrap span{white-space:nowrap;line-height:1;flex:0 0 auto;}
+      .monthly-output-wrap select{height:32px;border:0;background:transparent;font-weight:950;color:#111827;outline:none;min-width:106px;width:106px;line-height:32px;}
       .monthly-status-tab{grid-column:2;padding:22px 28px 32px!important;background:#f5f7fb}.monthly-status-card{background:#fff;border:1px solid #e5eaf2;border-radius:18px;padding:18px;box-shadow:0 8px 24px rgba(15,23,42,.045)}
       .monthly-status-card h2{margin:0 0 8px;color:#172033}.monthly-status-card p{margin:0 0 14px;color:#64748b;font-size:13px}.monthly-status-table{width:100%;border-collapse:collapse;background:#fff}
       .monthly-status-table th,.monthly-status-table td{border-bottom:1px solid #edf2f7;padding:9px;text-align:left;font-size:12px;vertical-align:middle}.monthly-status-table th{background:#f8fafc;color:#334155;font-weight:950}
@@ -90,9 +91,9 @@
     if (outputLabel) outputLabel.textContent = label('출력 기준', 'View');
     const output = $('monthlyOutputBasis');
     if (output) {
-      const current = output.value;
+      const current = output.value || localStorage.getItem('semsMonthlyOutputBasis') || 'all';
       output.innerHTML = '<option value="month">' + label('해당 월', 'Selected month') + '</option><option value="all">' + label('전체', 'All') + '</option>';
-      output.value = current || 'all';
+      output.value = current;
     }
     document.querySelectorAll('.sewon-lang-btn').forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.lang === currentLang());
@@ -255,10 +256,12 @@
   }
 
   function applyOutputBasisFilter(){
+    const rows = document.querySelectorAll('#entryRows tr');
+    if (!rows.length) return;
     const basis = outputBasis();
     const y = selectedYear();
     const m = selectedMonth();
-    document.querySelectorAll('#entryRows tr').forEach((row) => {
+    rows.forEach((row) => {
       if (basis === 'all') {
         row.style.display = '';
         return;
@@ -267,6 +270,33 @@
       row.style.display = (ym.year === y && ym.month === m) ? '' : 'none';
     });
     applyCompletionLock();
+  }
+
+  function installRenderHooks(){
+    if (window.__semsMonthlyRenderHooksInstalled) return;
+    window.__semsMonthlyRenderHooksInstalled = true;
+    ['renderEntries','render','switchTab'].forEach((name) => {
+      const original = window[name];
+      if (typeof original === 'function' && !original.__monthlyWrapped) {
+        window[name] = function(){
+          const result = original.apply(this, arguments);
+          applyOutputBasisFilter();
+          requestAnimationFrame(applyOutputBasisFilter);
+          return result;
+        };
+        window[name].__monthlyWrapped = true;
+      }
+    });
+  }
+
+  function installEntryRowsObserver(){
+    const body = $('entryRows');
+    if (!body || body.dataset.monthlyObserverInstalled === '1') return;
+    body.dataset.monthlyObserverInstalled = '1';
+    const observer = new MutationObserver(function(){
+      applyOutputBasisFilter();
+    });
+    observer.observe(body, { childList:true, subtree:false });
   }
 
   async function fetchCompanies(){
@@ -404,7 +434,7 @@
       }
     }, true);
     document.addEventListener('change', function(e){
-      if (['year','month'].includes(e.target.id)) setTimeout(function(){ refreshCompletions().catch(function(){}); applyOutputBasisFilter(); }, 80);
+      if (['year','month'].includes(e.target.id)) setTimeout(function(){ refreshCompletions().catch(function(){}); applyOutputBasisFilter(); }, 30);
     }, true);
   }
 
@@ -416,12 +446,14 @@
     ensureStatusTab();
     applyLanguageToMonthlyUi();
     bindEvents();
+    installRenderHooks();
+    installEntryRowsObserver();
     if (!statusLoaded) refreshCompletions().catch(function(){});
-    setTimeout(applyOutputBasisFilter, 100);
+    applyOutputBasisFilter();
+    requestAnimationFrame(applyOutputBasisFilter);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
   setTimeout(boot, 800);
   setTimeout(boot, 1800);
-  setInterval(function(){ applyOutputBasisFilter(); applyCompletionLock(); }, 2500);
 })();
