@@ -22,11 +22,11 @@
       html=html.replace('sb = window.supabase.createClient(cfg.url, cfg.anonKey);','sb = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true } });');
       html=html.replace('<button type="button" class="secondary mini-action" data-action="factors">적용 배출계수 세트 편집</button>','');
       html=html.replace('<div id="semsServerBadge" class="sems-server-badge">Supabase 연결됨</div>','');
-      const outputBasisCss = '<style id="sems-output-basis-width-fix">.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}#monthlyOutputBasisWrap.monthly-output-wrap,.monthly-output-wrap{display:inline-flex!important;align-items:center!important;gap:16px!important;height:40px!important;min-width:420px!important;width:420px!important;max-width:none!important;flex:0 0 420px!important;overflow:visible!important;white-space:nowrap!important;box-sizing:border-box!important;padding:0 18px!important}#monthlyOutputBasisLabel{display:inline-block!important;flex:0 0 78px!important;min-width:78px!important;width:78px!important;max-width:none!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;text-align:left!important}#monthlyOutputBasis{display:block!important;flex:0 0 260px!important;min-width:260px!important;width:260px!important;max-width:none!important;height:32px!important;line-height:32px!important;overflow:visible!important;white-space:nowrap!important;text-overflow:clip!important;text-align:left!important;padding-left:12px!important;padding-right:36px!important;box-sizing:border-box!important}</style>';
+      const outputBasisCss = '<style id="sems-output-basis-width-fix">.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}</style>';
       const patch = [
-        '<script src="assets/sems_monthly_complete.js?v=20260623"></' + 'script>',
+        '<script src="assets/sems_monthly_complete.js?v=20260625"></' + 'script>',
         outputBasisCss,
-        '<script src="assets/sems_delete_selection_force.js?v=20260623"></' + 'script>'
+        '<script src="assets/sems_delete_selection_force.js?v=20260625"></' + 'script>'
       ].join('');
       html=html.replace('</body>', patch + '</body>');
       document.open();
