@@ -22,7 +22,7 @@
       html=html.replace('sb = window.supabase.createClient(cfg.url, cfg.anonKey);','sb = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true } });');
       html=html.replace('<button type="button" class="secondary mini-action" data-action="factors">적용 배출계수 세트 편집</button>','');
       html=html.replace('<div id="semsServerBadge" class="sems-server-badge">Supabase 연결됨</div>','');
-      html=html.replace('</body>','<style>.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}</style><script src="assets/sems_monthly_complete.js?v=20260614"><\\/script><script src="assets/sems_entry_delete_selection.js?v=20260615"><\\/script></body>');
+      html=html.replace('</body>','<style>.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}</style><script src="assets/sems_monthly_complete.js?v=20260614"><\\/script><script src="assets/sems_delete_selection_hotfix.js?v=20260617"><\\/script></body>');
       document.open();
       document.write(html);
       document.close();
