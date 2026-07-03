@@ -22,7 +22,103 @@
       html=html.replace('sb = window.supabase.createClient(cfg.url, cfg.anonKey);','sb = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true } });');
       html=html.replace('<button type="button" class="secondary mini-action" data-action="factors">적용 배출계수 세트 편집</button>','');
       html=html.replace('<div id="semsServerBadge" class="sems-server-badge">Supabase 연결됨</div>','');
-      html=html.replace('</body>','<style>.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}#monthlyOutputBasisWrap,.monthly-output-wrap{min-width:240px!important;width:240px!important;flex:0 0 240px!important;overflow:visible!important;white-space:nowrap!important}#monthlyOutputBasis{min-width:132px!important;width:132px!important;max-width:none!important}</style><script src="assets/sems_monthly_complete.js?v=20260618"><\\/script><script src="assets/sems_delete_selection_force.js?v=20260618"><\\/script></body>');
+      html=html.replace('</body>',`<style>
+        .dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}
+        #monthlyOutputBasisWrap,.monthly-output-wrap{min-width:280px!important;width:280px!important;flex:0 0 280px!important;overflow:visible!important;white-space:nowrap!important;box-sizing:border-box!important;}
+        #monthlyOutputBasisLabel{display:inline-block!important;min-width:58px!important;white-space:nowrap!important;overflow:visible!important;}
+        #monthlyOutputBasis{min-width:150px!important;width:150px!important;max-width:none!important;overflow:visible!important;white-space:nowrap!important;text-overflow:clip!important;padding-right:24px!important;}
+        #entriesTab th.sems-select-delete-head{cursor:pointer!important;text-align:center!important;user-select:none!important;min-width:72px!important;}
+        #entriesTab th.sems-select-delete-head:hover{background:#eef2ff!important;color:#1d4ed8!important;}
+        #entriesTab td.sems-select-delete-cell{text-align:center!important;vertical-align:middle!important;}
+        .sems-entry-delete-check{width:18px!important;height:18px!important;accent-color:#2563eb!important;cursor:pointer!important;}
+        .sems-entry-delete-check:disabled{opacity:.35!important;cursor:not-allowed!important;}
+        #clearAll.sems-selected-delete-btn{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important;}
+      </style>
+      <script src="assets/sems_monthly_complete.js?v=20260620"><\\/script>
+      <script>
+      (function(){
+        'use strict';
+        var $=function(id){return document.getElementById(id)};
+        var tx=function(el){return el&&el.textContent?el.textContent.trim():''};
+        var lang=function(){return localStorage.getItem('sewonGhgUiLanguage')==='en'?'en':'ko'};
+        var label=function(ko,en){return lang()==='en'?en:ko};
+        function parseId(button){
+          if(!button)return '';
+          var onclick=button.getAttribute('onclick')||'';
+          var m=onclick.match(/(?:requestDeleteEntry|deleteEntry)\\(['\"]([^'\"]+)['\"]\\)/);
+          return m?m[1]:'';
+        }
+        function patchHeader(){
+          var table=document.querySelector('#entriesTab table');
+          var tr=table&&table.querySelector('thead tr');
+          if(!tr)return;
+          var ths=tr.querySelectorAll('th');
+          var th=ths[ths.length-1];
+          if(!th)return;
+          th.textContent=label('삭제','Delete');
+          th.classList.add('sems-select-delete-head');
+          th.title=label('클릭하면 현재 화면의 삭제 가능 항목을 전체 선택/해제합니다.','Click to select/deselect all visible rows.');
+          if(th.dataset.semsSelectDeleteHead==='1')return;
+          th.dataset.semsSelectDeleteHead='1';
+          th.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();toggleAll();},true);
+        }
+        function patchClearButton(){
+          var btn=$('clearAll')||Array.from(document.querySelectorAll('button')).find(function(b){var v=tx(b);return v.indexOf('전체 데이터 삭제')>=0||v.indexOf('선택 데이터 삭제')>=0||v.indexOf('Delete all')>=0||v.indexOf('Delete selected')>=0});
+          if(!btn)return;
+          btn.textContent=label('선택 데이터 삭제','Delete selected');
+          btn.classList.add('sems-selected-delete-btn');
+          btn.title=label('체크한 데이터만 삭제합니다.','Delete only checked rows.');
+          if(btn.dataset.semsSelectDeleteBtn==='1')return;
+          btn.dataset.semsSelectDeleteBtn='1';
+          btn.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();deleteSelected();},true);
+        }
+        function patchRows(){
+          Array.from(document.querySelectorAll('#entryRows tr')).forEach(function(row){
+            if(row.id==='inlineEntryRow'||row.classList.contains('inline-entry-empty'))return;
+            var cells=row.querySelectorAll('td');
+            if(!cells.length)return;
+            var cell=cells[cells.length-1];
+            if(!cell||cell.querySelector('.sems-entry-delete-check'))return;
+            var btn=Array.from(cell.querySelectorAll('button')).find(function(b){var v=tx(b);return v.indexOf('삭제')>=0||v.indexOf('Delete')>=0});
+            var id=parseId(btn);
+            if(!id)return;
+            var disabled=!!(btn&&btn.disabled);
+            cell.classList.add('sems-select-delete-cell');
+            cell.innerHTML='<input type="checkbox" class="sems-entry-delete-check" data-entry-id="'+id+'" '+(disabled?'disabled':'')+' title="'+label('삭제할 데이터 선택','Select row to delete')+'">';
+          });
+        }
+        function visibleChecks(){return Array.from(document.querySelectorAll('.sems-entry-delete-check')).filter(function(box){var row=box.closest('tr');return row&&row.style.display!=='none'&&!box.disabled;});}
+        function toggleAll(){var boxes=visibleChecks();if(!boxes.length)return;var all=boxes.every(function(b){return b.checked});boxes.forEach(function(b){b.checked=!all});}
+        function selectedIds(){return visibleChecks().filter(function(b){return b.checked}).map(function(b){return b.dataset.entryId}).filter(Boolean);}
+        function deleteSelected(){
+          var ids=selectedIds();
+          if(!ids.length){alert(label('삭제할 데이터를 체크해 주세요.','Please check rows to delete.'));return;}
+          if(!confirm(label('선택한 데이터 '+ids.length+'건을 삭제할까요?','Delete '+ids.length+' selected row(s)?')))return;
+          if(typeof window.deleteEntry!=='function'){alert(label('삭제 기능을 찾지 못했습니다. 새로고침 후 다시 시도해 주세요.','Delete function is not ready. Please refresh and try again.'));return;}
+          ids.forEach(function(id){window.deleteEntry(id)});
+          setTimeout(apply,80);
+        }
+        function apply(){patchHeader();patchClearButton();patchRows();}
+        function hook(){
+          ['renderEntries','render'].forEach(function(name){
+            var original=window[name];
+            if(typeof original==='function'&&!original.__semsSelectDeleteWrapped){
+              window[name]=function(){var r=original.apply(this,arguments);apply();requestAnimationFrame(apply);setTimeout(apply,40);return r;};
+              window[name].__semsSelectDeleteWrapped=true;
+            }
+          });
+          var body=$('entryRows');
+          if(body&&body.dataset.semsSelectDeleteObserver!=='1'){
+            body.dataset.semsSelectDeleteObserver='1';
+            new MutationObserver(apply).observe(body,{childList:true,subtree:false});
+          }
+        }
+        function boot(){hook();apply();}
+        if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+        setTimeout(boot,200);setTimeout(boot,800);setTimeout(boot,1600);setInterval(apply,1500);
+      })();
+      <\\/script>
+      </body>`);
       document.open();
       document.write(html);
       document.close();
