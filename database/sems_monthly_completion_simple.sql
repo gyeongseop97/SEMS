@@ -1,6 +1,6 @@
 -- SEMS simple monthly completion status
--- Run once in Supabase SQL Editor.
--- This is intentionally simple: no approval, no reject, no lock.
+-- Run this in Supabase SQL Editor.
+-- Purpose: monthly completion / withdraw only. No approval, no rejection.
 
 create extension if not exists pgcrypto;
 
@@ -47,7 +47,9 @@ alter table public.sems_monthly_completions enable row level security;
 
 drop policy if exists sems_monthly_completions_select on public.sems_monthly_completions;
 drop policy if exists sems_monthly_completions_upsert on public.sems_monthly_completions;
+drop policy if exists sems_monthly_completions_update on public.sems_monthly_completions;
 drop policy if exists sems_monthly_completions_delete_admin on public.sems_monthly_completions;
+drop policy if exists sems_monthly_completions_delete_own_or_admin on public.sems_monthly_completions;
 
 create policy sems_monthly_completions_select
 on public.sems_monthly_completions
@@ -80,10 +82,15 @@ with check (
   or company = public.sems_current_company()
 );
 
-create policy sems_monthly_completions_delete_admin
+-- Company users can withdraw only their own monthly completion.
+-- Admin can delete any completion record.
+create policy sems_monthly_completions_delete_own_or_admin
 on public.sems_monthly_completions
 for delete
 to authenticated
-using (public.sems_is_admin());
+using (
+  public.sems_is_admin()
+  or company = public.sems_current_company()
+);
 
 grant select, insert, update, delete on public.sems_monthly_completions to authenticated;
