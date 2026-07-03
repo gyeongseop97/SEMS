@@ -17,12 +17,12 @@
     const SOURCE='https://raw.githubusercontent.com/gyeongseop97/SEMS/7b1850b6a35c4db760082c40cf0d53e31ddfcb91/index.html';
     const err=document.getElementById('bootError');
     try{
-      let html=await (await fetch(SOURCE,{cache:'force-cache'})).text();
+      let html=await (await fetch(SOURCE,{cache:'no-store'})).text();
       html=html.replace('회사별 계정으로 접속하면 본인 회사의 배출량 데이터만 조회·수정할 수 있습니다. 기획팀 어드민 계정은 전체 데이터를 관리합니다.','회사별 계정으로 접속하면 본인 회사의 배출량 데이터만 수정할 수 있습니다.');
       html=html.replace('sb = window.supabase.createClient(cfg.url, cfg.anonKey);','sb = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true } });');
       html=html.replace('<button type="button" class="secondary mini-action" data-action="factors">적용 배출계수 세트 편집</button>','');
       html=html.replace('<div id="semsServerBadge" class="sems-server-badge">Supabase 연결됨</div>','');
-      html=html.replace('</body>','<style>.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}</style><script src="assets/sems_monthly_complete.js?v=20260614"><\\/script><script src="assets/sems_delete_selection_hotfix.js?v=20260617"><\\/script></body>');
+      html=html.replace('</body>','<style>.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}#monthlyOutputBasisWrap,.monthly-output-wrap{min-width:240px!important;width:240px!important;flex:0 0 240px!important;overflow:visible!important;white-space:nowrap!important}#monthlyOutputBasis{min-width:132px!important;width:132px!important;max-width:none!important}</style><script src="assets/sems_monthly_complete.js?v=20260618"><\\/script><script src="assets/sems_delete_force_final.js?v=20260618"><\\/script></body>');
       document.open();
       document.write(html);
       document.close();
