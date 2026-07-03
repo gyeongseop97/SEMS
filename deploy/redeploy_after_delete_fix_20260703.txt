@@ -1,0 +1,3 @@
+Deploy trigger after fixing delete checkbox script filename.
+Latest fix commit: 6c41aa32d82addd586509387276b067bc8da98bd
+Timestamp: 2026-07-03
