@@ -34,53 +34,76 @@
     if (!wrap || !select) return;
 
     const current = select.value || localStorage.getItem('semsMonthlyOutputBasis') || 'all';
-    const monthText = t('출력 기준 해당 월', 'View Selected month');
-    const allText = t('출력 기준 전체', 'View All');
+    const monthText = t('해당 월', 'Selected month');
+    const allText = t('전체', 'All');
+    const labelText = t('출력 기준', 'View');
+
+    if (labelEl) {
+      labelEl.textContent = labelText;
+      labelEl.removeAttribute('aria-hidden');
+    }
+
     if (select.options.length < 2 || select.options[0].textContent !== monthText || select.options[1].textContent !== allText) {
       select.innerHTML = '<option value="month">' + monthText + '</option><option value="all">' + allText + '</option>';
       select.value = current;
     }
 
-    if (labelEl) {
-      setImportant(labelEl, 'display', 'none');
-      labelEl.setAttribute('aria-hidden', 'true');
-    }
-
-    setImportant(wrap, 'display', 'inline-flex');
-    setImportant(wrap, 'align-items', 'center');
-    setImportant(wrap, 'justify-content', 'center');
+    setImportant(wrap, 'display', 'inline-grid');
+    setImportant(wrap, 'grid-template-columns', '82px 92px');
+    setImportant(wrap, 'align-items', 'stretch');
     setImportant(wrap, 'gap', '0');
     setImportant(wrap, 'height', '40px');
-    setImportant(wrap, 'min-width', '0');
-    setImportant(wrap, 'width', '170px');
-    setImportant(wrap, 'max-width', '170px');
-    setImportant(wrap, 'flex', '0 0 170px');
+    setImportant(wrap, 'min-width', '174px');
+    setImportant(wrap, 'width', '174px');
+    setImportant(wrap, 'max-width', '174px');
+    setImportant(wrap, 'flex', '0 0 174px');
     setImportant(wrap, 'box-sizing', 'border-box');
     setImportant(wrap, 'padding', '0');
-    setImportant(wrap, 'overflow', 'visible');
+    setImportant(wrap, 'overflow', 'hidden');
     setImportant(wrap, 'white-space', 'nowrap');
     setImportant(wrap, 'border-radius', '999px');
+    setImportant(wrap, 'border', '1px solid #dbeafe');
+    setImportant(wrap, 'background', '#f8fbff');
+
+    setImportant(labelEl, 'display', 'flex');
+    setImportant(labelEl, 'align-items', 'center');
+    setImportant(labelEl, 'justify-content', 'center');
+    setImportant(labelEl, 'width', '82px');
+    setImportant(labelEl, 'height', '40px');
+    setImportant(labelEl, 'box-sizing', 'border-box');
+    setImportant(labelEl, 'padding', '0 8px');
+    setImportant(labelEl, 'overflow', 'hidden');
+    setImportant(labelEl, 'white-space', 'nowrap');
+    setImportant(labelEl, 'text-overflow', 'clip');
+    setImportant(labelEl, 'font-size', '12px');
+    setImportant(labelEl, 'font-weight', '950');
+    setImportant(labelEl, 'letter-spacing', '-0.45px');
+    setImportant(labelEl, 'color', '#0f172a');
+    setImportant(labelEl, 'border-right', '1px solid #dbeafe');
+    setImportant(labelEl, 'line-height', '1');
 
     setImportant(select, 'display', 'block');
     setImportant(select, 'appearance', 'auto');
     setImportant(select, '-webkit-appearance', 'menulist');
-    setImportant(select, 'min-width', '0');
-    setImportant(select, 'width', '170px');
-    setImportant(select, 'max-width', '170px');
+    setImportant(select, 'width', '92px');
+    setImportant(select, 'min-width', '92px');
+    setImportant(select, 'max-width', '92px');
     setImportant(select, 'height', '40px');
     setImportant(select, 'line-height', '40px');
     setImportant(select, 'box-sizing', 'border-box');
     setImportant(select, 'border', '0');
+    setImportant(select, 'border-radius', '0');
     setImportant(select, 'background', 'transparent');
-    setImportant(select, 'padding-left', '16px');
-    setImportant(select, 'padding-right', '26px');
+    setImportant(select, 'padding-left', '10px');
+    setImportant(select, 'padding-right', '22px');
     setImportant(select, 'overflow', 'visible');
     setImportant(select, 'white-space', 'nowrap');
     setImportant(select, 'text-overflow', 'clip');
     setImportant(select, 'font-size', '12px');
     setImportant(select, 'font-weight', '950');
-    setImportant(select, 'letter-spacing', '-0.5px');
+    setImportant(select, 'letter-spacing', '-0.45px');
     setImportant(select, 'color', '#0f172a');
+    setImportant(select, 'outline', 'none');
   }
 
   function normalize(v){
