@@ -7,52 +7,13 @@
   const t = (ko, en) => isEn() ? en : ko;
 
   function addStyle(){
-    if ($('semsDeleteForceStyle')) return;
-    const style = document.createElement('style');
-    style.id = 'semsDeleteForceStyle';
+    let style = $('semsDeleteForceStyle');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'semsDeleteForceStyle';
+      document.head.appendChild(style);
+    }
     style.textContent = `
-      #monthlyOutputBasisWrap.monthly-output-wrap,
-      .monthly-output-wrap{
-        display:inline-grid!important;
-        grid-template-columns:max-content minmax(118px,1fr)!important;
-        align-items:center!important;
-        column-gap:12px!important;
-        height:40px!important;
-        min-width:260px!important;
-        width:280px!important;
-        max-width:280px!important;
-        flex:0 0 280px!important;
-        overflow:visible!important;
-        white-space:nowrap!important;
-        padding:0 14px!important;
-        box-sizing:border-box!important;
-      }
-      #monthlyOutputBasisLabel,
-      .monthly-output-wrap span{
-        display:block!important;
-        min-width:0!important;
-        width:auto!important;
-        max-width:none!important;
-        white-space:nowrap!important;
-        overflow:visible!important;
-        text-overflow:clip!important;
-        line-height:1!important;
-      }
-      #monthlyOutputBasis,
-      .monthly-output-wrap select{
-        display:block!important;
-        min-width:118px!important;
-        width:100%!important;
-        max-width:none!important;
-        height:32px!important;
-        line-height:32px!important;
-        overflow:visible!important;
-        white-space:nowrap!important;
-        padding-left:8px!important;
-        padding-right:28px!important;
-        text-overflow:clip!important;
-        box-sizing:border-box!important;
-      }
       #entriesTab th.sems-force-delete-head{cursor:pointer!important;text-align:center!important;user-select:none!important;min-width:72px!important;}
       #entriesTab th.sems-force-delete-head:hover{background:#eef2ff!important;color:#1d4ed8!important;}
       #entriesTab td.sems-force-delete-cell{text-align:center!important;vertical-align:middle!important;}
@@ -60,7 +21,54 @@
       .sems-force-delete-check:disabled{opacity:.35!important;cursor:not-allowed!important;}
       .sems-force-selected-delete{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important;}
     `;
-    document.head.appendChild(style);
+  }
+
+  function setImportant(el, prop, value){
+    if (el) el.style.setProperty(prop, value, 'important');
+  }
+
+  function patchOutputBasisLayout(){
+    const wrap = $('monthlyOutputBasisWrap') || document.querySelector('.monthly-output-wrap');
+    const labelEl = $('monthlyOutputBasisLabel') || (wrap ? wrap.querySelector('span') : null);
+    const select = $('monthlyOutputBasis') || (wrap ? wrap.querySelector('select') : null);
+    if (!wrap || !select) return;
+
+    setImportant(wrap, 'display', 'inline-flex');
+    setImportant(wrap, 'align-items', 'center');
+    setImportant(wrap, 'gap', '12px');
+    setImportant(wrap, 'height', '40px');
+    setImportant(wrap, 'min-width', '260px');
+    setImportant(wrap, 'width', '260px');
+    setImportant(wrap, 'max-width', '260px');
+    setImportant(wrap, 'flex', '0 0 260px');
+    setImportant(wrap, 'box-sizing', 'border-box');
+    setImportant(wrap, 'padding', '0 14px');
+    setImportant(wrap, 'overflow', 'visible');
+    setImportant(wrap, 'white-space', 'nowrap');
+
+    setImportant(labelEl, 'display', 'inline-block');
+    setImportant(labelEl, 'flex', '0 0 auto');
+    setImportant(labelEl, 'min-width', '0');
+    setImportant(labelEl, 'width', 'auto');
+    setImportant(labelEl, 'max-width', 'none');
+    setImportant(labelEl, 'overflow', 'visible');
+    setImportant(labelEl, 'white-space', 'nowrap');
+    setImportant(labelEl, 'text-overflow', 'clip');
+    setImportant(labelEl, 'line-height', '1');
+
+    setImportant(select, 'display', 'inline-block');
+    setImportant(select, 'flex', '1 1 auto');
+    setImportant(select, 'min-width', '150px');
+    setImportant(select, 'width', '150px');
+    setImportant(select, 'max-width', '150px');
+    setImportant(select, 'height', '32px');
+    setImportant(select, 'line-height', '32px');
+    setImportant(select, 'box-sizing', 'border-box');
+    setImportant(select, 'padding-left', '6px');
+    setImportant(select, 'padding-right', '28px');
+    setImportant(select, 'overflow', 'visible');
+    setImportant(select, 'white-space', 'nowrap');
+    setImportant(select, 'text-overflow', 'clip');
   }
 
   function normalize(v){
@@ -189,6 +197,7 @@
 
   function apply(){
     addStyle();
+    patchOutputBasisLayout();
     patchHeader();
     patchBulkButton();
     patchRows();
