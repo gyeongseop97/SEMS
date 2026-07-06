@@ -24,9 +24,9 @@
       html=html.replace('<div id="semsServerBadge" class="sems-server-badge">Supabase 연결됨</div>','');
       const outputBasisCss = '<style id="sems-output-basis-width-fix">.dashboard-actions button[data-action="factors"],#semsServerBadge{display:none!important}</style>';
       const patch = [
-        '<script src="assets/sems_monthly_complete.js?v=20260627"></' + 'script>',
+        '<script src="assets/sems_monthly_complete.js?v=20260629"></' + 'script>',
         outputBasisCss,
-        '<script src="assets/sems_delete_selection_force.js?v=20260627"></' + 'script>'
+        '<script src="assets/sems_delete_selection_force.js?v=20260629"></' + 'script>'
       ].join('');
       html=html.replace('</body>', patch + '</body>');
       document.open();
