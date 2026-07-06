@@ -35,16 +35,19 @@
 
     setImportant(wrap, 'display', 'inline-flex');
     setImportant(wrap, 'align-items', 'center');
-    setImportant(wrap, 'gap', '12px');
+    setImportant(wrap, 'gap', '10px');
     setImportant(wrap, 'height', '40px');
-    setImportant(wrap, 'min-width', '260px');
-    setImportant(wrap, 'width', '260px');
-    setImportant(wrap, 'max-width', '260px');
-    setImportant(wrap, 'flex', '0 0 260px');
+    setImportant(wrap, 'min-width', '250px');
+    setImportant(wrap, 'width', '250px');
+    setImportant(wrap, 'max-width', '250px');
+    setImportant(wrap, 'flex', '0 0 250px');
     setImportant(wrap, 'box-sizing', 'border-box');
-    setImportant(wrap, 'padding', '0 14px');
+    setImportant(wrap, 'padding', '0 12px');
     setImportant(wrap, 'overflow', 'visible');
     setImportant(wrap, 'white-space', 'nowrap');
+    setImportant(wrap, 'font-size', '11px');
+    setImportant(wrap, 'font-weight', '800');
+    setImportant(wrap, 'letter-spacing', '-0.3px');
 
     setImportant(labelEl, 'display', 'inline-block');
     setImportant(labelEl, 'flex', '0 0 auto');
@@ -55,20 +58,26 @@
     setImportant(labelEl, 'white-space', 'nowrap');
     setImportant(labelEl, 'text-overflow', 'clip');
     setImportant(labelEl, 'line-height', '1');
+    setImportant(labelEl, 'font-size', '11px');
+    setImportant(labelEl, 'font-weight', '800');
+    setImportant(labelEl, 'letter-spacing', '-0.3px');
 
     setImportant(select, 'display', 'inline-block');
     setImportant(select, 'flex', '1 1 auto');
-    setImportant(select, 'min-width', '150px');
-    setImportant(select, 'width', '150px');
-    setImportant(select, 'max-width', '150px');
+    setImportant(select, 'min-width', '140px');
+    setImportant(select, 'width', '140px');
+    setImportant(select, 'max-width', '140px');
     setImportant(select, 'height', '32px');
     setImportant(select, 'line-height', '32px');
     setImportant(select, 'box-sizing', 'border-box');
-    setImportant(select, 'padding-left', '6px');
-    setImportant(select, 'padding-right', '28px');
+    setImportant(select, 'padding-left', '4px');
+    setImportant(select, 'padding-right', '24px');
     setImportant(select, 'overflow', 'visible');
     setImportant(select, 'white-space', 'nowrap');
     setImportant(select, 'text-overflow', 'clip');
+    setImportant(select, 'font-size', '11px');
+    setImportant(select, 'font-weight', '800');
+    setImportant(select, 'letter-spacing', '-0.3px');
   }
 
   function normalize(v){
