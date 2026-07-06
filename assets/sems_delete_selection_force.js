@@ -106,6 +106,43 @@
     setImportant(select, 'outline', 'none');
   }
 
+  function toolbarItemFor(idOrSelector){
+    const el = idOrSelector.charAt(0) === '#'
+      ? document.querySelector(idOrSelector)
+      : $(idOrSelector);
+    if (!el) return null;
+    let node = el;
+    while (node && node.parentElement && node.parentElement !== document.body) {
+      const parent = node.parentElement;
+      const count = ['monthlyOutputBasisWrap','monthlyCompleteButton','company','site','year','month','addInlineEntryButton']
+        .filter((id) => parent.querySelector('#' + id)).length;
+      if (count >= 3) return node;
+      node = parent;
+    }
+    return el;
+  }
+
+  function patchToolbarOrder(){
+    const sequence = [
+      ['monthlyOutputBasisWrap', 1],
+      ['company', 2],
+      ['site', 3],
+      ['year', 4],
+      ['month', 5],
+      ['monthlyCompleteButton', 6],
+      ['addInlineEntryButton', 7]
+    ];
+    sequence.forEach(([id, order]) => {
+      const item = toolbarItemFor(id);
+      if (item) setImportant(item, 'order', String(order));
+    });
+    const completeBtn = $('monthlyCompleteButton');
+    if (completeBtn) {
+      setImportant(completeBtn, 'margin-left', '2px');
+      setImportant(completeBtn, 'margin-right', '4px');
+    }
+  }
+
   function normalize(v){
     return String(v == null ? '' : v).replace(/,/g, '').replace(/\s+/g, ' ').trim();
   }
@@ -233,6 +270,7 @@
   function apply(){
     addStyle();
     patchOutputBasisLayout();
+    patchToolbarOrder();
     patchHeader();
     patchBulkButton();
     patchRows();
