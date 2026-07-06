@@ -43,8 +43,8 @@
       labelEl.removeAttribute('aria-hidden');
     }
 
-    if (select.options.length < 2 || select.options[0].textContent !== monthText || select.options[1].textContent !== allText) {
-      select.innerHTML = '<option value="month">' + monthText + '</option><option value="all">' + allText + '</option>';
+    if (select.options.length < 2 || select.options[0].textContent !== allText || select.options[1].textContent !== monthText) {
+      select.innerHTML = '<option value="all">' + allText + '</option><option value="month">' + monthText + '</option>';
       select.value = current;
     }
 
