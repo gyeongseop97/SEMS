@@ -33,51 +33,54 @@
     const select = $('monthlyOutputBasis') || (wrap ? wrap.querySelector('select') : null);
     if (!wrap || !select) return;
 
+    const current = select.value || localStorage.getItem('semsMonthlyOutputBasis') || 'all';
+    const monthText = t('출력 기준 해당 월', 'View Selected month');
+    const allText = t('출력 기준 전체', 'View All');
+    if (select.options.length < 2 || select.options[0].textContent !== monthText || select.options[1].textContent !== allText) {
+      select.innerHTML = '<option value="month">' + monthText + '</option><option value="all">' + allText + '</option>';
+      select.value = current;
+    }
+
+    if (labelEl) {
+      setImportant(labelEl, 'display', 'none');
+      labelEl.setAttribute('aria-hidden', 'true');
+    }
+
     setImportant(wrap, 'display', 'inline-flex');
     setImportant(wrap, 'align-items', 'center');
-    setImportant(wrap, 'gap', '10px');
+    setImportant(wrap, 'justify-content', 'center');
+    setImportant(wrap, 'gap', '0');
     setImportant(wrap, 'height', '40px');
-    setImportant(wrap, 'min-width', '250px');
-    setImportant(wrap, 'width', '250px');
-    setImportant(wrap, 'max-width', '250px');
-    setImportant(wrap, 'flex', '0 0 250px');
+    setImportant(wrap, 'min-width', '0');
+    setImportant(wrap, 'width', '170px');
+    setImportant(wrap, 'max-width', '170px');
+    setImportant(wrap, 'flex', '0 0 170px');
     setImportant(wrap, 'box-sizing', 'border-box');
-    setImportant(wrap, 'padding', '0 12px');
+    setImportant(wrap, 'padding', '0');
     setImportant(wrap, 'overflow', 'visible');
     setImportant(wrap, 'white-space', 'nowrap');
-    setImportant(wrap, 'font-size', '11px');
-    setImportant(wrap, 'font-weight', '800');
-    setImportant(wrap, 'letter-spacing', '-0.3px');
+    setImportant(wrap, 'border-radius', '999px');
 
-    setImportant(labelEl, 'display', 'inline-block');
-    setImportant(labelEl, 'flex', '0 0 auto');
-    setImportant(labelEl, 'min-width', '0');
-    setImportant(labelEl, 'width', 'auto');
-    setImportant(labelEl, 'max-width', 'none');
-    setImportant(labelEl, 'overflow', 'visible');
-    setImportant(labelEl, 'white-space', 'nowrap');
-    setImportant(labelEl, 'text-overflow', 'clip');
-    setImportant(labelEl, 'line-height', '1');
-    setImportant(labelEl, 'font-size', '11px');
-    setImportant(labelEl, 'font-weight', '800');
-    setImportant(labelEl, 'letter-spacing', '-0.3px');
-
-    setImportant(select, 'display', 'inline-block');
-    setImportant(select, 'flex', '1 1 auto');
-    setImportant(select, 'min-width', '140px');
-    setImportant(select, 'width', '140px');
-    setImportant(select, 'max-width', '140px');
-    setImportant(select, 'height', '32px');
-    setImportant(select, 'line-height', '32px');
+    setImportant(select, 'display', 'block');
+    setImportant(select, 'appearance', 'auto');
+    setImportant(select, '-webkit-appearance', 'menulist');
+    setImportant(select, 'min-width', '0');
+    setImportant(select, 'width', '170px');
+    setImportant(select, 'max-width', '170px');
+    setImportant(select, 'height', '40px');
+    setImportant(select, 'line-height', '40px');
     setImportant(select, 'box-sizing', 'border-box');
-    setImportant(select, 'padding-left', '4px');
-    setImportant(select, 'padding-right', '24px');
+    setImportant(select, 'border', '0');
+    setImportant(select, 'background', 'transparent');
+    setImportant(select, 'padding-left', '16px');
+    setImportant(select, 'padding-right', '26px');
     setImportant(select, 'overflow', 'visible');
     setImportant(select, 'white-space', 'nowrap');
     setImportant(select, 'text-overflow', 'clip');
-    setImportant(select, 'font-size', '11px');
-    setImportant(select, 'font-weight', '800');
-    setImportant(select, 'letter-spacing', '-0.3px');
+    setImportant(select, 'font-size', '12px');
+    setImportant(select, 'font-weight', '950');
+    setImportant(select, 'letter-spacing', '-0.5px');
+    setImportant(select, 'color', '#0f172a');
   }
 
   function normalize(v){
